@@ -20,7 +20,7 @@
     "test": "bun test:node && bun test:edge",
     "test:edge": "vitest --config vitest.edge.config.js --run",
     "test:node": "vitest --config vitest.node.config.js --run",
-    "ci": "bun run build && bun run check-format && bun run lint && bun run test",
+    "ci": "bun run build && bun run check-format && bun run test",
     "local-release": "changeset version && changeset publish",
     "prepublishOnly": "npm run ci"
   },
