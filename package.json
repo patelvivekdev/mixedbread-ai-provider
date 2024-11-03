@@ -1,12 +1,20 @@
 {
   "name": "mixedbread-ai-provider",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Mixedbread AI Provider for running Mixedbread AI models with Vercel AI SDK",
+  "author": "Vivek Patel <me@patelvivek.dev>",
+  "license": "Apache-2.0",
+  "keywords": [
+    "ai",
+    "vercel-ai",
+    "mixedbread"
+  ],
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "files": [
-    "dist/**/*"
+    "dist/**/*",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "build": "tsup",
@@ -24,31 +32,28 @@
     "local-release": "changeset version && changeset publish",
     "prepublishOnly": "npm run ci"
   },
-  "keywords": [
-    "ai",
-    "vercel-ai",
-    "mixedbread"
-  ],
-  "author": "Vivek Patel <me@patelvivek.dev>",
-  "license": "Apache-2.0",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
   "dependencies": {
     "@ai-sdk/provider": "0.0.26",
-    "@ai-sdk/provider-utils": "1.0.22",
-    "partial-json": "0.1.7"
+    "@ai-sdk/provider-utils": "1.0.22"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "^0.16.4",
     "@changesets/cli": "^2.27.9",
     "@edge-runtime/vm": "^3.2.0",
-    "@types/node": "^18.19.56",
-    "@vitest/coverage-v8": "^2.1.3",
-    "@vitest/ui": "^2.1.3",
+    "@types/node": "^18.19.64",
     "prettier": "^3.3.3",
-    "tsup": "^8.3.0",
+    "tsup": "^8.3.5",
     "typescript": "5.5.4",
     "vite-tsconfig-paths": "^4.3.2",
-    "vitest": "^2.1.3",
-    "zod": "3.23.8"
+    "vitest": "^2.1.4",
+    "zod": "^3.23.8"
   },
   "peerDependencies": {
     "zod": "^3.0.0"

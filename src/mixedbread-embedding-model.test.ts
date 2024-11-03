@@ -3,8 +3,8 @@ import { JsonTestServer } from '@ai-sdk/provider-utils/test';
 import { createMixedbread } from './mixedbread-provider';
 
 const dummyEmbeddings = [
-  { embedding: [0.1, 0.2, 0.3, 0.4, 0.5], index: 0 },
-  { embedding: [0.6, 0.7, 0.8, 0.9, 1], index: 1 },
+  [0.1, 0.2, 0.3, 0.4, 0.5],
+  [0.6, 0.7, 0.8, 0.9, 1],
 ];
 const testValues = ['sunny day at the beach', 'rainy day in the city'];
 
@@ -22,16 +22,23 @@ describe('doEmbed', () => {
   function prepareJsonResponse({
     embeddings = dummyEmbeddings,
     usage = {
-      tokens: 8,
       prompt_tokens: 4,
       total_tokens: 12,
     },
   }: {
     embeddings?: EmbeddingModelV1Embedding[];
-    usage?: { tokens: number; prompt_tokens: number; total_tokens: number };
+    usage?: { prompt_tokens: number; total_tokens: number };
   } = {}) {
     server.responseBodyJson = {
-      embeddings,
+      object: 'list',
+      data: embeddings.map((embedding, i) => ({
+        object: 'embedding',
+        embedding,
+        index: i,
+      })),
+      model: 'mixedbread-ai/mxbai-embed-large-v1',
+      normalized: true,
+      encoding_format: 'float',
       usage,
     };
   }
@@ -41,9 +48,7 @@ describe('doEmbed', () => {
 
     const { embeddings } = await model.doEmbed({ values: testValues });
 
-    const expectedEmbeddings = dummyEmbeddings.map((e) => e.embedding);
-
-    expect(embeddings).toStrictEqual(expectedEmbeddings);
+    expect(embeddings).toStrictEqual(dummyEmbeddings);
   });
 
   it('should expose the raw response headers', async () => {
@@ -56,7 +61,7 @@ describe('doEmbed', () => {
     const { rawResponse } = await model.doEmbed({ values: testValues });
 
     expect(rawResponse?.headers).toStrictEqual({
-      'content-length': '163',
+      'content-length': '293',
       // default headers:
       'content-type': 'application/json',
 

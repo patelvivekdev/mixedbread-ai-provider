@@ -33,7 +33,7 @@ export class MixedbreadEmbeddingModel implements EmbeddingModelV1<string> {
   }
 
   get maxEmbeddingsPerCall(): number {
-    return this.settings.maxEmbeddingsPerCall ?? 512;
+    return 512;
   }
 
   get supportsParallelCalls(): boolean {
@@ -81,26 +81,18 @@ export class MixedbreadEmbeddingModel implements EmbeddingModelV1<string> {
     });
 
     return {
-      embeddings: response.embeddings.map(
-        (e: { embedding: number[] }) => e.embedding,
-      ),
+      embeddings: response.data.map((item) => item.embedding),
+      usage: response.usage
+        ? { tokens: response.usage.total_tokens }
+        : undefined,
       rawResponse: { headers: responseHeaders },
-      usage: {
-        tokens: response.usage.total_tokens,
-      },
     };
   }
 }
 
+// minimal version of the schema, focussed on what is needed for the implementation
+// this approach limits breakages when the API changes and increases efficiency
 const mixedbreadTextEmbeddingResponseSchema = z.object({
-  embeddings: z.array(
-    z.object({
-      embedding: z.array(z.number()),
-      index: z.number(),
-    }),
-  ),
-  usage: z.object({
-    prompt_tokens: z.number(),
-    total_tokens: z.number(),
-  }),
+  data: z.array(z.object({ embedding: z.array(z.number()) })),
+  usage: z.object({ total_tokens: z.number() }).nullish(),
 });
