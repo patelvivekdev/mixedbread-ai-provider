@@ -1,6 +1,6 @@
 {
   "name": "mixedbread-ai-provider",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Mixedbread AI Provider for running Mixedbread AI models with Vercel AI SDK",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
