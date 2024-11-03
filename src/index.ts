@@ -4,5 +4,3 @@ export type {
   MixedbreadProvider,
   MixedbreadProviderSettings,
 } from './mixedbread-provider';
-
-
