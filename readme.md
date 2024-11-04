@@ -24,7 +24,7 @@ bun add mixedbread-ai-provider
 
 ## Configuration
 
-The Mixedbread AI Provider requires an API key to be configured. You can obtain an API key by signing up at [Mixedbread](https://mixedbread.com).
+The Mixedbread AI Provider requires an API key to be configured. You can obtain an API key by signing up at [Mixedbread](https://mixedbread.ai).
 
 add the following to your `.env` file:
 
