@@ -45,6 +45,14 @@ const embeddingModel = mixedbread.textEmbeddingModel(
 export const generateEmbeddings = async (
   value: string,
 ): Promise<Array<{ embedding: number[]; content: string }>> => {
+  // Generate chunks from the input value
+  const chunks = value.split('\n');
+
+  // Optional: You can also split the input value by comma
+  // const chunks = value.split(',');
+
+  // Or you can use LLM to generate chunks(summarize) from the input value
+
   const { embeddings } = await embedMany({
     model: embeddingModel,
     values: chunks,
@@ -52,3 +60,27 @@ export const generateEmbeddings = async (
   return embeddings.map((e, i) => ({ content: chunks[i], embedding: e }));
 };
 ```
+
+### Add settings to the model
+
+The settings object should contain the settings you want to add to the model. You can find the available settings for the model in the Mixedbread API documentation: https://www.mixedbread.ai/api-reference/endpoints/embeddings
+
+```typescript
+const mixedbread = createMixedbread({
+  apiKey: process.env.MIXEDBREAD_API_KEY,
+});
+
+// Initialize the embedding model
+const embeddingModel = mixedbread.textEmbeddingModel(
+  'mixedbread-ai/mxbai-embed-large-v1',
+  // adding settings
+  {
+    prompt: 'Generate embeddings for text',
+    normalized: true,
+  },
+);
+```
+
+## Authors
+
+- [patelvivekdev](https://patelvivek.dev)

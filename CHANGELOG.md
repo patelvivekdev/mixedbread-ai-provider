@@ -1,5 +1,11 @@
 # mixedbread-ai-provider
 
+## 0.0.4
+
+### Patch Changes
+
+- Update example usage to README
+
 ## 0.0.3
 
 ### Patch Changes
