@@ -28,7 +28,7 @@ export interface MixedbreadEmbeddingSettings {
    * The desired format for the embeddings. Defaults to "float". If multiple formats are requested, the response will include an object with each format for each embedding.
    * Options: float, float16, binary, ubinary, int8, uint8, base64.
    */
-  encoding_format?:
+  encodingFormat?:
     | 'float'
     | 'float16'
     | 'binary'
@@ -41,7 +41,7 @@ export interface MixedbreadEmbeddingSettings {
    * The strategy for truncating input text that exceeds the model's maximum length. Defaults to "end". Setting it to "none" will result in an error if the text is too long.
    * Options: start, end, none.
    */
-  truncation_strategy?: 'start' | 'end' | 'none';
+  truncationStrategy?: 'start' | 'end' | 'none';
 
   /**
 Override the parallelism of embedding calls.

@@ -81,6 +81,38 @@ describe('doEmbed', () => {
     });
   });
 
+  it('should pass the settings ', async () => {
+    prepareJsonResponse();
+
+    const prompt = 'test-prompt';
+
+    const mixedbread = createMixedbread({
+      apiKey: 'test-api',
+    });
+
+    await mixedbread
+      .textEmbeddingModel('mixedbread-ai/mxbai-embed-large-v1', {
+        prompt,
+        encodingFormat: 'float16',
+        normalized: false,
+        dimensions: 768,
+        truncationStrategy: 'end',
+      })
+      .doEmbed({
+        values: testValues,
+      });
+
+    expect(await server.getRequestBodyJson()).toStrictEqual({
+      input: testValues,
+      model: 'mixedbread-ai/mxbai-embed-large-v1',
+      prompt,
+      normalize: false,
+      dimensions: 768,
+      encoding_format: 'float16',
+      truncation_strategy: 'end',
+    });
+  });
+
   it('should pass custom headers', async () => {
     prepareJsonResponse();
 

@@ -1,5 +1,11 @@
 # mixedbread-ai-provider
 
+## 1.0.2
+
+### Patch Changes
+
+- fix adding additional settings to the model(see README for usage)
+
 ## 1.0.1
 
 ### Patch Changes

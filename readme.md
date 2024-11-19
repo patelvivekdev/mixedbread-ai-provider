@@ -75,8 +75,10 @@ const embeddingModel = mixedbread.textEmbeddingModel(
   'mixedbread-ai/mxbai-embed-large-v1',
   // adding settings
   {
-    prompt: 'Generate embeddings for text',
+    prompt: 'Generate embeddings for text', // Max 256 characters
     normalized: true,
+    dimensions: 768, // Max model dimensions
+    truncationStrategy: 'end',
   },
 );
 ```

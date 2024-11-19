@@ -36,6 +36,10 @@ export class MixedbreadEmbeddingModel implements EmbeddingModelV1<string> {
     return 256;
   }
 
+  get prompt(): string | undefined {
+    return this.settings.prompt;
+  }
+
   get supportsParallelCalls(): boolean {
     return this.settings.supportsParallelCalls ?? false;
   }
@@ -70,6 +74,11 @@ export class MixedbreadEmbeddingModel implements EmbeddingModelV1<string> {
       body: {
         input: values,
         model: this.modelId,
+        prompt: this.settings.prompt,
+        normalize: this.settings.normalized,
+        dimensions: this.settings.dimensions,
+        encoding_format: this.settings.encodingFormat,
+        truncation_strategy: this.settings.truncationStrategy,
       },
       failedResponseHandler: mixedbreadFailedResponseHandler,
       fetch: this.config.fetch,

@@ -1,6 +1,6 @@
 {
   "name": "mixedbread-ai-provider",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Mixedbread AI Provider for running Mixedbread AI models with Vercel AI SDK",
   "author": "Vivek Patel <me@patelvivek.dev>",
   "license": "Apache-2.0",
