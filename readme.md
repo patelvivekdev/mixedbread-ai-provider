@@ -49,7 +49,7 @@ export const generateEmbeddings = async (
   const chunks = value.split('\n');
 
   // Optional: You can also split the input value by comma
-  // const chunks = value.split(',');
+  // const chunks = value.split('.');
 
   // Or you can use LLM to generate chunks(summarize) from the input value
 

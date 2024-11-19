@@ -37,7 +37,7 @@ export class MixedbreadEmbeddingModel implements EmbeddingModelV1<string> {
   }
 
   get supportsParallelCalls(): boolean {
-    return false;
+    return this.settings.supportsParallelCalls ?? false;
   }
 
   constructor(
@@ -77,7 +77,7 @@ export class MixedbreadEmbeddingModel implements EmbeddingModelV1<string> {
       successfulResponseHandler: createJsonResponseHandler(
         mixedbreadTextEmbeddingResponseSchema,
       ),
-      url: `${this.config.baseURL}/v1/embeddings`,
+      url: `${this.config.baseURL}/embeddings`,
     });
 
     return {

@@ -9,7 +9,7 @@ const dummyEmbeddings = [
 const testValues = ['sunny day at the beach', 'rainy day in the city'];
 
 const provider = createMixedbread({
-  baseURL: 'https://api.mixedbread.ai',
+  baseURL: 'https://api.mixedbread.ai/v1',
   apiKey: 'test-api-key',
 });
 const model = provider('mixedbread-ai/mxbai-embed-large-v1');
@@ -91,9 +91,11 @@ describe('doEmbed', () => {
       apiKey: 'test-api-key',
     });
 
-    await mixedbread.embedding('mixedbread-ai/mxbai-embed-large-v1').doEmbed({
-      values: testValues,
-    });
+    await mixedbread
+      .textEmbeddingModel('mixedbread-ai/mxbai-embed-large-v1')
+      .doEmbed({
+        values: testValues,
+      });
 
     const requestHeaders = await server.getRequestHeaders();
 

@@ -42,4 +42,9 @@ export interface MixedbreadEmbeddingSettings {
    * Options: start, end, none.
    */
   truncation_strategy?: 'start' | 'end' | 'none';
+
+  /**
+Override the parallelism of embedding calls.
+    */
+  supportsParallelCalls?: boolean;
 }

@@ -1,5 +1,11 @@
 # mixedbread-ai-provider
 
+## 1.0.0
+
+### Update dependencies
+
+- Update dependencies to latest versions
+
 ## 0.0.4
 
 ### Patch Changes

@@ -45,14 +45,9 @@ export interface MixedbreadProvider extends ProviderV1 {
 export interface MixedbreadProviderSettings {
   /**
   Use a different URL prefix for API calls, e.g. to use proxy servers.
-  The default prefix is `https://api.mixedbread.ai`.
+  The default prefix is `https://api.mixedbread.ai/v1`.
      */
   baseURL?: string;
-
-  /**
-  @deprecated Use `baseURL` instead.
-     */
-  baseUrl?: string;
 
   /**
   API key that is being send using the `Authorization` header.
@@ -79,8 +74,7 @@ export function createMixedbread(
   options: MixedbreadProviderSettings = {},
 ): MixedbreadProvider {
   const baseURL =
-    withoutTrailingSlash(options.baseURL ?? options.baseUrl) ??
-    'https://api.mixedbread.ai';
+    withoutTrailingSlash(options.baseURL) ?? 'https://api.mixedbread.ai/v1';
 
   const getHeaders = () => ({
     Authorization: `Bearer ${loadApiKey({
