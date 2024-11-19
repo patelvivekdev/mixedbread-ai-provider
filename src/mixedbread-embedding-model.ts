@@ -33,7 +33,7 @@ export class MixedbreadEmbeddingModel implements EmbeddingModelV1<string> {
   }
 
   get maxEmbeddingsPerCall(): number {
-    return 512;
+    return 256;
   }
 
   get supportsParallelCalls(): boolean {

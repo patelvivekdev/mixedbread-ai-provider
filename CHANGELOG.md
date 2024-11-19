@@ -1,5 +1,11 @@
 # mixedbread-ai-provider
 
+## 1.0.1
+
+### Patch Changes
+
+- fix max embeddings per call to `256`
+
 ## 1.0.0
 
 ### Update dependencies
