@@ -1,15 +1,15 @@
-import {
+import type {
   EmbeddingModelV1,
   LanguageModelV1,
   ProviderV1,
 } from '@ai-sdk/provider';
 import {
-  FetchFunction,
+  type FetchFunction,
   loadApiKey,
   withoutTrailingSlash,
 } from '@ai-sdk/provider-utils';
 import { MixedbreadEmbeddingModel } from './mixedbread-embedding-model';
-import {
+import type {
   MixedbreadEmbeddingModelId,
   MixedbreadEmbeddingSettings,
 } from './mixedbread-embedding-settings';

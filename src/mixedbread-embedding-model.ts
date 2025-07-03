@@ -1,24 +1,26 @@
 import {
-  EmbeddingModelV1,
+  type EmbeddingModelV1,
   TooManyEmbeddingValuesForCallError,
 } from '@ai-sdk/provider';
 import {
+  combineHeaders,
   createJsonResponseHandler,
+  type FetchFunction,
   postJsonToApi,
 } from '@ai-sdk/provider-utils';
 import { z } from 'zod';
 
-import {
+import type {
   MixedbreadEmbeddingModelId,
   MixedbreadEmbeddingSettings,
 } from '@/mixedbread-embedding-settings';
 import { mixedbreadFailedResponseHandler } from '@/mixedbread-error';
 
 type MixedbreadEmbeddingConfig = {
-  baseURL: string;
-  fetch?: typeof fetch;
-  headers: () => Record<string, string | undefined>;
   provider: string;
+  baseURL: string;
+  headers: () => Record<string, string | undefined>;
+  fetch?: FetchFunction;
 };
 
 export class MixedbreadEmbeddingModel implements EmbeddingModelV1<string> {
@@ -57,6 +59,7 @@ export class MixedbreadEmbeddingModel implements EmbeddingModelV1<string> {
   async doEmbed({
     abortSignal,
     values,
+    headers,
   }: Parameters<EmbeddingModelV1<string>['doEmbed']>[0]): Promise<
     Awaited<ReturnType<EmbeddingModelV1<string>['doEmbed']>>
   > {
@@ -82,7 +85,7 @@ export class MixedbreadEmbeddingModel implements EmbeddingModelV1<string> {
       },
       failedResponseHandler: mixedbreadFailedResponseHandler,
       fetch: this.config.fetch,
-      headers: this.config.headers(),
+      headers: combineHeaders(this.config.headers(), headers),
       successfulResponseHandler: createJsonResponseHandler(
         mixedbreadTextEmbeddingResponseSchema,
       ),

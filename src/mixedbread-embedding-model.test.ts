@@ -1,5 +1,5 @@
-import { EmbeddingModelV1Embedding } from '@ai-sdk/provider';
-import { JsonTestServer } from '@ai-sdk/provider-utils/test';
+import type { EmbeddingModelV1Embedding } from '@ai-sdk/provider';
+import { createTestServer } from '@ai-sdk/provider-utils/test';
 import { createMixedbread } from './mixedbread-provider';
 
 const dummyEmbeddings = [
@@ -13,33 +13,35 @@ const provider = createMixedbread({
   apiKey: 'test-api-key',
 });
 const model = provider('mixedbread-ai/mxbai-embed-large-v1');
+const server = createTestServer({
+  'https://api.mixedbread.ai/v1/embeddings': {},
+});
 
 describe('doEmbed', () => {
-  const server = new JsonTestServer('https://api.mixedbread.ai/v1/embeddings');
-
-  server.setupTestEnvironment();
-
   function prepareJsonResponse({
     embeddings = dummyEmbeddings,
-    usage = {
-      prompt_tokens: 4,
-      total_tokens: 12,
-    },
+    usage = { prompt_tokens: 4, total_tokens: 12 },
+    headers,
   }: {
     embeddings?: EmbeddingModelV1Embedding[];
     usage?: { prompt_tokens: number; total_tokens: number };
+    headers?: Record<string, string>;
   } = {}) {
-    server.responseBodyJson = {
-      object: 'list',
-      data: embeddings.map((embedding, i) => ({
-        object: 'embedding',
-        embedding,
-        index: i,
-      })),
-      model: 'mixedbread-ai/mxbai-embed-large-v1',
-      normalized: true,
-      encoding_format: 'float',
-      usage,
+    server.urls['https://api.mixedbread.ai/v1/embeddings'].response = {
+      type: 'json-value',
+      headers,
+      body: {
+        object: 'list',
+        data: embeddings.map((embedding, i) => ({
+          object: 'embedding',
+          embedding,
+          index: i,
+        })),
+        model: 'mixedbread-ai/mxbai-embed-large-v1',
+        normalized: true,
+        encoding_format: 'float',
+        usage,
+      },
     };
   }
 
@@ -52,11 +54,7 @@ describe('doEmbed', () => {
   });
 
   it('should expose the raw response headers', async () => {
-    prepareJsonResponse();
-
-    server.responseHeaders = {
-      'test-header': 'test-value',
-    };
+    prepareJsonResponse({ headers: { 'test-header': 'test-value' } });
 
     const { rawResponse } = await model.doEmbed({ values: testValues });
 
@@ -75,7 +73,7 @@ describe('doEmbed', () => {
 
     await model.doEmbed({ values: testValues });
 
-    expect(await server.getRequestBodyJson()).toStrictEqual({
+    expect(await server.calls[0]?.requestBody).toStrictEqual({
       input: testValues,
       model: 'mixedbread-ai/mxbai-embed-large-v1',
     });
@@ -86,9 +84,7 @@ describe('doEmbed', () => {
 
     const prompt = 'test-prompt';
 
-    const mixedbread = createMixedbread({
-      apiKey: 'test-api',
-    });
+    const mixedbread = createMixedbread({ apiKey: 'test-api' });
 
     await mixedbread
       .textEmbeddingModel('mixedbread-ai/mxbai-embed-large-v1', {
@@ -98,11 +94,9 @@ describe('doEmbed', () => {
         dimensions: 768,
         truncationStrategy: 'end',
       })
-      .doEmbed({
-        values: testValues,
-      });
+      .doEmbed({ values: testValues });
 
-    expect(await server.getRequestBodyJson()).toStrictEqual({
+    expect(await server.calls[0]?.requestBody).toStrictEqual({
       input: testValues,
       model: 'mixedbread-ai/mxbai-embed-large-v1',
       prompt,
@@ -117,24 +111,25 @@ describe('doEmbed', () => {
     prepareJsonResponse();
 
     const mixedbread = createMixedbread({
-      headers: {
-        'Custom-Header': 'test-header',
-      },
+      baseURL: 'https://api.mixedbread.ai/v1',
       apiKey: 'test-api-key',
+      headers: { 'Custom-Provider-Header': 'provider-header-value' },
     });
 
     await mixedbread
       .textEmbeddingModel('mixedbread-ai/mxbai-embed-large-v1')
       .doEmbed({
         values: testValues,
+        headers: { 'Custom-Request-Header': 'request-header-value' },
       });
 
-    const requestHeaders = await server.getRequestHeaders();
+    const requestHeaders = server.calls[0]?.requestHeaders;
 
     expect(requestHeaders).toStrictEqual({
       authorization: 'Bearer test-api-key',
       'content-type': 'application/json',
-      'custom-header': 'test-header',
+      'custom-provider-header': 'provider-header-value',
+      'custom-request-header': 'request-header-value',
     });
   });
 });

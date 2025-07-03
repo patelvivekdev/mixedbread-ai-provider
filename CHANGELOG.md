@@ -1,5 +1,13 @@
 # mixedbread-ai-provider
 
+## 1.1.0
+
+### Minor Changes
+
+- Update dependencies
+  - @ai-sdk/provider 1.0.0 → 1.1.3
+  - @ai-sdk/provider-utils 2.0.0 → 2.2.8
+
 ## 1.0.2
 
 ### Patch Changes

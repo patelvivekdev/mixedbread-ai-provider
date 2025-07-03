@@ -66,9 +66,7 @@ export const generateEmbeddings = async (
 The settings object should contain the settings you want to add to the model. You can find the available settings for the model in the Mixedbread API documentation: https://www.mixedbread.ai/api-reference/endpoints/embeddings
 
 ```typescript
-const mixedbread = createMixedbread({
-  apiKey: process.env.MIXEDBREAD_API_KEY,
-});
+const mixedbread = createMixedbread({ apiKey: process.env.MIXEDBREAD_API_KEY });
 
 // Initialize the embedding model
 const embeddingModel = mixedbread.textEmbeddingModel(
