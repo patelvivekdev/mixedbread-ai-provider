@@ -9,12 +9,12 @@ const dummyEmbeddings = [
 const testValues = ['sunny day at the beach', 'rainy day in the city'];
 
 const provider = createMixedbread({
-  baseURL: 'https://api.mixedbread.ai/v1',
+  baseURL: 'https://api.mixedbread.com/v1',
   apiKey: 'test-api-key',
 });
 const model = provider('mixedbread-ai/mxbai-embed-large-v1');
 const server = createTestServer({
-  'https://api.mixedbread.ai/v1/embeddings': {},
+  'https://api.mixedbread.com/v1/embeddings': {},
 });
 
 describe('doEmbed', () => {
@@ -27,7 +27,7 @@ describe('doEmbed', () => {
     usage?: { prompt_tokens: number; total_tokens: number };
     headers?: Record<string, string>;
   } = {}) {
-    server.urls['https://api.mixedbread.ai/v1/embeddings'].response = {
+    server.urls['https://api.mixedbread.com/v1/embeddings'].response = {
       type: 'json-value',
       headers,
       body: {
@@ -111,7 +111,7 @@ describe('doEmbed', () => {
     prepareJsonResponse();
 
     const mixedbread = createMixedbread({
-      baseURL: 'https://api.mixedbread.ai/v1',
+      baseURL: 'https://api.mixedbread.com/v1',
       apiKey: 'test-api-key',
       headers: { 'Custom-Provider-Header': 'provider-header-value' },
     });

@@ -1,5 +1,11 @@
 # mixedbread-ai-provider
 
+## 1.1.1
+
+### Patch Changes
+
+- change the base url to https://api.mixedbread.com/v1
+
 ## 1.1.0
 
 ### Minor Changes

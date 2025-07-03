@@ -24,7 +24,7 @@ bun add mixedbread-ai-provider
 
 ## Configuration
 
-The Mixedbread AI Provider requires an API key to be configured. You can obtain an API key by signing up at [Mixedbread](https://mixedbread.ai).
+The Mixedbread AI Provider requires an API key to be configured. You can obtain an API key by signing up at [Mixedbread](https://mixedbread.com).
 
 add the following to your `.env` file:
 
@@ -63,7 +63,7 @@ export const generateEmbeddings = async (
 
 ### Add settings to the model
 
-The settings object should contain the settings you want to add to the model. You can find the available settings for the model in the Mixedbread API documentation: https://www.mixedbread.ai/api-reference/endpoints/embeddings
+The settings object should contain the settings you want to add to the model. You can find the available settings for the model in the Mixedbread API documentation: https://www.mixedbread.com/api-reference/endpoints/embeddings
 
 ```typescript
 const mixedbread = createMixedbread({ apiKey: process.env.MIXEDBREAD_API_KEY });
