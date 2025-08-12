@@ -15,7 +15,7 @@ export const mixedbreadEmbeddingOptions = z.object({
   prompt: z.string().optional(),
 
   /**
-   * Option to normalize the embeddings. Defaults to true.
+   * Option to normalize the embeddings.
    */
   normalized: z.boolean().optional(),
 
@@ -27,23 +27,12 @@ export const mixedbreadEmbeddingOptions = z.object({
   dimensions: z.number().optional(),
 
   /**
-   * The desired format for the embeddings. Defaults to "float". If multiple formats are requested, the response will include an object with each format for each embedding.
+   * The desired format for the embeddings. Defaults to "float".
    * Options: float, float16, binary, ubinary, int8, uint8, base64.
    */
   encodingFormat: z
     .enum(['float', 'float16', 'binary', 'ubinary', 'int8', 'uint8', 'base64'])
     .optional(),
-
-  /**
-   * The strategy for truncating input text that exceeds the model's maximum length. Defaults to "end". Setting it to "none" will result in an error if the text is too long.
-   * Options: start, end, none.
-   */
-  truncationStrategy: z.enum(['start', 'end', 'none']).optional(),
-
-  /**
-Override the parallelism of embedding calls.
-    */
-  supportsParallelCalls: z.boolean().optional(),
 });
 
 export type MixedbreadEmbeddingOptions = z.infer<

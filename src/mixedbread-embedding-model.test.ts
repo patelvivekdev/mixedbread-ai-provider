@@ -96,7 +96,6 @@ describe('doEmbed', () => {
             encodingFormat: 'float16',
             normalized: false,
             dimensions: 768,
-            truncationStrategy: 'end',
           },
         },
       });
@@ -108,7 +107,6 @@ describe('doEmbed', () => {
       normalize: false,
       dimensions: 768,
       encoding_format: 'float16',
-      truncation_strategy: 'end',
     });
   });
 

@@ -1,5 +1,19 @@
 # mixedbread-ai-provider
 
+## 3.0.0
+
+### Major Changes
+
+- Remove deprecated/unsupported Mixedbread provider options.
+
+  The only supported keys under `providerOptions.mixedbread` are now:
+  - `prompt` (string, up to 256 chars)
+  - `normalized` (boolean)
+  - `dimensions` (number)
+  - `encodingFormat` ("float" | "float16" | "binary" | "ubinary" | "int8" | "uint8" | "base64")
+
+  Any other keys previously accepted by mistake have been removed. Update your integrations to use only the options listed above.
+
 ## 2.0.0
 
 ### Major Changes

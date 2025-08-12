@@ -81,7 +81,6 @@ const embedding = await embed({
       prompt: 'Generate embeddings for text', // Max 256 characters
       normalized: true,
       dimensions: 1024, // dimensions
-      truncationStrategy: 'end',
     },
   },
 });

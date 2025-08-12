@@ -86,7 +86,6 @@ export class MixedbreadEmbeddingModel implements EmbeddingModelV2<string> {
         normalize: embeddingOptions?.normalized,
         dimensions: embeddingOptions?.dimensions,
         encoding_format: embeddingOptions?.encodingFormat,
-        truncation_strategy: embeddingOptions?.truncationStrategy,
       },
       failedResponseHandler: mixedbreadFailedResponseHandler,
       fetch: this.config.fetch,
