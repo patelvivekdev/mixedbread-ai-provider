@@ -1,20 +1,21 @@
 import {
-  type EmbeddingModelV1,
+  type EmbeddingModelV2,
   TooManyEmbeddingValuesForCallError,
 } from '@ai-sdk/provider';
 import {
   combineHeaders,
   createJsonResponseHandler,
   type FetchFunction,
+  parseProviderOptions,
   postJsonToApi,
 } from '@ai-sdk/provider-utils';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
-import type {
-  MixedbreadEmbeddingModelId,
-  MixedbreadEmbeddingSettings,
-} from '@/mixedbread-embedding-settings';
 import { mixedbreadFailedResponseHandler } from '@/mixedbread-error';
+import {
+  mixedbreadEmbeddingOptions,
+  type MixedbreadEmbeddingModelId,
+} from './mixedbread-embedding-options';
 
 type MixedbreadEmbeddingConfig = {
   provider: string;
@@ -23,12 +24,11 @@ type MixedbreadEmbeddingConfig = {
   fetch?: FetchFunction;
 };
 
-export class MixedbreadEmbeddingModel implements EmbeddingModelV1<string> {
-  readonly specificationVersion = 'v1';
+export class MixedbreadEmbeddingModel implements EmbeddingModelV2<string> {
+  readonly specificationVersion = 'v2';
   readonly modelId: MixedbreadEmbeddingModelId;
 
   private readonly config: MixedbreadEmbeddingConfig;
-  private readonly settings: MixedbreadEmbeddingSettings;
 
   get provider(): string {
     return this.config.provider;
@@ -38,21 +38,15 @@ export class MixedbreadEmbeddingModel implements EmbeddingModelV1<string> {
     return 256;
   }
 
-  get prompt(): string | undefined {
-    return this.settings.prompt;
-  }
-
   get supportsParallelCalls(): boolean {
-    return this.settings.supportsParallelCalls ?? false;
+    return true;
   }
 
   constructor(
     modelId: MixedbreadEmbeddingModelId,
-    settings: MixedbreadEmbeddingSettings,
     config: MixedbreadEmbeddingConfig,
   ) {
     this.modelId = modelId;
-    this.settings = settings;
     this.config = config;
   }
 
@@ -60,9 +54,16 @@ export class MixedbreadEmbeddingModel implements EmbeddingModelV1<string> {
     abortSignal,
     values,
     headers,
-  }: Parameters<EmbeddingModelV1<string>['doEmbed']>[0]): Promise<
-    Awaited<ReturnType<EmbeddingModelV1<string>['doEmbed']>>
+    providerOptions,
+  }: Parameters<EmbeddingModelV2<string>['doEmbed']>[0]): Promise<
+    Awaited<ReturnType<EmbeddingModelV2<string>['doEmbed']>>
   > {
+    const embeddingOptions = await parseProviderOptions({
+      provider: 'mixedbread',
+      providerOptions,
+      schema: mixedbreadEmbeddingOptions,
+    });
+
     if (values.length > this.maxEmbeddingsPerCall) {
       throw new TooManyEmbeddingValuesForCallError({
         maxEmbeddingsPerCall: this.maxEmbeddingsPerCall,
@@ -72,16 +73,20 @@ export class MixedbreadEmbeddingModel implements EmbeddingModelV1<string> {
       });
     }
 
-    const { responseHeaders, value: response } = await postJsonToApi({
+    const {
+      responseHeaders,
+      value: response,
+      rawValue,
+    } = await postJsonToApi({
       abortSignal,
       body: {
         input: values,
         model: this.modelId,
-        prompt: this.settings.prompt,
-        normalize: this.settings.normalized,
-        dimensions: this.settings.dimensions,
-        encoding_format: this.settings.encodingFormat,
-        truncation_strategy: this.settings.truncationStrategy,
+        prompt: embeddingOptions?.prompt,
+        normalize: embeddingOptions?.normalized,
+        dimensions: embeddingOptions?.dimensions,
+        encoding_format: embeddingOptions?.encodingFormat,
+        truncation_strategy: embeddingOptions?.truncationStrategy,
       },
       failedResponseHandler: mixedbreadFailedResponseHandler,
       fetch: this.config.fetch,
@@ -97,7 +102,7 @@ export class MixedbreadEmbeddingModel implements EmbeddingModelV1<string> {
       usage: response.usage
         ? { tokens: response.usage.total_tokens }
         : undefined,
-      rawResponse: { headers: responseHeaders },
+      response: { headers: responseHeaders, body: rawValue },
     };
   }
 }

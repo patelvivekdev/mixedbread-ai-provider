@@ -1,4 +1,4 @@
-import type { EmbeddingModelV1Embedding } from '@ai-sdk/provider';
+import type { EmbeddingModelV2Embedding } from '@ai-sdk/provider';
 import { createTestServer } from '@ai-sdk/provider-utils/test';
 import { createMixedbread } from './mixedbread-provider';
 
@@ -23,7 +23,7 @@ describe('doEmbed', () => {
     usage = { prompt_tokens: 4, total_tokens: 12 },
     headers,
   }: {
-    embeddings?: EmbeddingModelV1Embedding[];
+    embeddings?: EmbeddingModelV2Embedding[];
     usage?: { prompt_tokens: number; total_tokens: number };
     headers?: Record<string, string>;
   } = {}) {
@@ -56,9 +56,9 @@ describe('doEmbed', () => {
   it('should expose the raw response headers', async () => {
     prepareJsonResponse({ headers: { 'test-header': 'test-value' } });
 
-    const { rawResponse } = await model.doEmbed({ values: testValues });
+    const { response } = await model.doEmbed({ values: testValues });
 
-    expect(rawResponse?.headers).toStrictEqual({
+    expect(response?.headers).toStrictEqual({
       'content-length': '293',
       // default headers:
       'content-type': 'application/json',
@@ -73,7 +73,7 @@ describe('doEmbed', () => {
 
     await model.doEmbed({ values: testValues });
 
-    expect(await server.calls[0]?.requestBody).toStrictEqual({
+    expect(await server.calls[0]?.requestBodyJson).toStrictEqual({
       input: testValues,
       model: 'mixedbread-ai/mxbai-embed-large-v1',
     });
@@ -87,16 +87,21 @@ describe('doEmbed', () => {
     const mixedbread = createMixedbread({ apiKey: 'test-api' });
 
     await mixedbread
-      .textEmbeddingModel('mixedbread-ai/mxbai-embed-large-v1', {
-        prompt,
-        encodingFormat: 'float16',
-        normalized: false,
-        dimensions: 768,
-        truncationStrategy: 'end',
-      })
-      .doEmbed({ values: testValues });
+      .textEmbeddingModel('mixedbread-ai/mxbai-embed-large-v1')
+      .doEmbed({
+        values: testValues,
+        providerOptions: {
+          mixedbread: {
+            prompt,
+            encodingFormat: 'float16',
+            normalized: false,
+            dimensions: 768,
+            truncationStrategy: 'end',
+          },
+        },
+      });
 
-    expect(await server.calls[0]?.requestBody).toStrictEqual({
+    expect(await server.calls[0]?.requestBodyJson).toStrictEqual({
       input: testValues,
       model: 'mixedbread-ai/mxbai-embed-large-v1',
       prompt,

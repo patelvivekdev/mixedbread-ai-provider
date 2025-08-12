@@ -1,7 +1,8 @@
 import type {
-  EmbeddingModelV1,
-  LanguageModelV1,
-  ProviderV1,
+  EmbeddingModelV2,
+  ImageModelV2,
+  LanguageModelV2,
+  ProviderV2,
 } from '@ai-sdk/provider';
 import {
   type FetchFunction,
@@ -9,37 +10,14 @@ import {
   withoutTrailingSlash,
 } from '@ai-sdk/provider-utils';
 import { MixedbreadEmbeddingModel } from './mixedbread-embedding-model';
-import type {
-  MixedbreadEmbeddingModelId,
-  MixedbreadEmbeddingSettings,
-} from './mixedbread-embedding-settings';
+import type { MixedbreadEmbeddingModelId } from './mixedbread-embedding-options';
 
-export interface MixedbreadProvider extends ProviderV1 {
-  (
-    modelId: MixedbreadEmbeddingModelId,
-    settings?: MixedbreadEmbeddingSettings,
-  ): EmbeddingModelV1<string>;
-
-  /**
-  @deprecated Use `textEmbeddingModel()` instead.
-     */
-  embedding(
-    modelId: MixedbreadEmbeddingModelId,
-    settings?: MixedbreadEmbeddingSettings,
-  ): EmbeddingModelV1<string>;
-
-  /**
-  @deprecated Use `textEmbeddingModel()` instead.
-     */
-  textEmbedding(
-    modelId: MixedbreadEmbeddingModelId,
-    settings?: MixedbreadEmbeddingSettings,
-  ): EmbeddingModelV1<string>;
+export interface MixedbreadProvider extends ProviderV2 {
+  (modelId: MixedbreadEmbeddingModelId): EmbeddingModelV2<string>;
 
   textEmbeddingModel: (
     modelId: MixedbreadEmbeddingModelId,
-    settings?: MixedbreadEmbeddingSettings,
-  ) => EmbeddingModelV1<string>;
+  ) => EmbeddingModelV2<string>;
 }
 
 export interface MixedbreadProviderSettings {
@@ -85,38 +63,31 @@ export function createMixedbread(
     ...options.headers,
   });
 
-  const createEmbeddingModel = (
-    modelId: MixedbreadEmbeddingModelId,
-    settings: MixedbreadEmbeddingSettings = {},
-  ) =>
-    new MixedbreadEmbeddingModel(modelId, settings, {
+  const createEmbeddingModel = (modelId: MixedbreadEmbeddingModelId) =>
+    new MixedbreadEmbeddingModel(modelId, {
       provider: 'mixedbread.embedding',
       baseURL,
       headers: getHeaders,
       fetch: options.fetch,
     });
 
-  const provider = function (
-    modelId: MixedbreadEmbeddingModelId,
-    settings?: MixedbreadEmbeddingSettings,
-  ) {
+  const provider = function (modelId: MixedbreadEmbeddingModelId) {
     if (new.target) {
       throw new Error(
         'The Mixedbread model function cannot be called with the new keyword.',
       );
     }
 
-    return createEmbeddingModel(modelId, settings);
+    return createEmbeddingModel(modelId);
   };
 
-  provider.embedding = createEmbeddingModel;
-  provider.textEmbedding = createEmbeddingModel;
   provider.textEmbeddingModel = createEmbeddingModel;
 
-  provider.chat = provider.languageModel = (
-    modelId: string,
-  ): LanguageModelV1 => {
+  provider.chat = provider.languageModel = (): LanguageModelV2 => {
     throw new Error('languageModel method is not implemented.');
+  };
+  provider.imageModel = (): ImageModelV2 => {
+    throw new Error('imageModel method is not implemented.');
   };
 
   return provider as MixedbreadProvider;

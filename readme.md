@@ -71,14 +71,20 @@ const mixedbread = createMixedbread({ apiKey: process.env.MIXEDBREAD_API_KEY });
 // Initialize the embedding model
 const embeddingModel = mixedbread.textEmbeddingModel(
   'mixedbread-ai/mxbai-embed-large-v1',
-  // adding settings
-  {
-    prompt: 'Generate embeddings for text', // Max 256 characters
-    normalized: true,
-    dimensions: 768, // Max model dimensions
-    truncationStrategy: 'end',
-  },
 );
+
+const embedding = await embed({
+  model: embeddingModel,
+  value: 'The quick brown fox jumps over the lazy dog',
+  providerOptions: {
+    mixedbread: {
+      prompt: 'Generate embeddings for text', // Max 256 characters
+      normalized: true,
+      dimensions: 1024, // dimensions
+      truncationStrategy: 'end',
+    },
+  },
+});
 ```
 
 ## Authors
