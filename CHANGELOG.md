@@ -1,5 +1,13 @@
 # mixedbread-ai-provider
 
+## 2.0.0
+
+### Major Changes
+
+- a6c94e8: Update to ai sdk beta
+  - @ai-sdk/provider and @ai-sdk/provider-utils beta
+  - change to zod v4 internally
+
 ## 2.0.0-beta.0
 
 ### Major Changes
