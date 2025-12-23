@@ -1,0 +1,23 @@
+{
+  "object": "list",
+  "data": [
+    {
+      "index": 1,
+      "score": 0.9876,
+      "object": "text_document"
+    },
+    {
+      "index": 0,
+      "score": 0.8765,
+      "object": "text_document"
+    }
+  ],
+  "model": "mixedbread-ai/mxbai-rerank-large-v2",
+  "usage": {
+    "prompt_tokens": 453,
+    "total_tokens": 1276,
+    "completion_tokens": 823
+  },
+  "top_k": 3,
+  "return_input": false
+}
