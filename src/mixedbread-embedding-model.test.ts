@@ -1,5 +1,5 @@
-import type { EmbeddingModelV2Embedding } from '@ai-sdk/provider';
-import { createTestServer } from '@ai-sdk/provider-utils/test';
+import type { EmbeddingModelV3Embedding } from '@ai-sdk/provider';
+import { createTestServer } from '@ai-sdk/test-server/with-vitest';
 import { createMixedbread } from './mixedbread-provider';
 
 const dummyEmbeddings = [

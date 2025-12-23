@@ -1,5 +1,14 @@
 # mixedbread-ai-provider
 
+## 4.0.0
+
+### Major Changes
+
+- Updated to AI SDK v6
+  - Upgraded from ProviderV2 to ProviderV3
+  - Upgraded from EmbeddingModelV2 to EmbeddingModelV3
+  - Added reranking support with RerankingModelV3
+
 ## 3.0.0
 
 ### Major Changes

@@ -1,8 +1,9 @@
 import type {
-  EmbeddingModelV2,
-  ImageModelV2,
-  LanguageModelV2,
-  ProviderV2,
+  EmbeddingModelV3,
+  ImageModelV3,
+  LanguageModelV3,
+  ProviderV3,
+  RerankingModelV3,
 } from '@ai-sdk/provider';
 import {
   type FetchFunction,
@@ -11,13 +12,17 @@ import {
 } from '@ai-sdk/provider-utils';
 import { MixedbreadEmbeddingModel } from './mixedbread-embedding-model';
 import type { MixedbreadEmbeddingModelId } from './mixedbread-embedding-options';
+import type { MixedbreadRerankingModelId } from './reranking/mixedbread-reranking-options';
+import { MixedbreadRerankingModel } from './reranking/mixedbread-reranking-model';
 
-export interface MixedbreadProvider extends ProviderV2 {
-  (modelId: MixedbreadEmbeddingModelId): EmbeddingModelV2<string>;
+export interface MixedbreadProvider extends ProviderV3 {
+  (modelId: MixedbreadEmbeddingModelId): EmbeddingModelV3;
 
-  textEmbeddingModel: (
-    modelId: MixedbreadEmbeddingModelId,
-  ) => EmbeddingModelV2<string>;
+  textEmbeddingModel: (modelId: MixedbreadEmbeddingModelId) => EmbeddingModelV3;
+
+  reranking: (modelId: MixedbreadRerankingModelId) => RerankingModelV3;
+
+  rerankingModel: (modelId: MixedbreadRerankingModelId) => RerankingModelV3;
 }
 
 export interface MixedbreadProviderSettings {
@@ -81,16 +86,27 @@ export function createMixedbread(
     return createEmbeddingModel(modelId);
   };
 
+  const createRerankingModel = (modelId: MixedbreadRerankingModelId) =>
+    new MixedbreadRerankingModel(modelId, {
+      provider: 'mixedbread.reranking',
+      baseURL,
+      headers: getHeaders,
+      fetch: options.fetch,
+    });
+
   provider.textEmbeddingModel = createEmbeddingModel;
 
-  provider.chat = provider.languageModel = (): LanguageModelV2 => {
+  provider.chat = provider.languageModel = (): LanguageModelV3 => {
     throw new Error('languageModel method is not implemented.');
   };
-  provider.imageModel = (): ImageModelV2 => {
+  provider.imageModel = (): ImageModelV3 => {
     throw new Error('imageModel method is not implemented.');
   };
 
-  return provider as MixedbreadProvider;
+  provider.reranking = createRerankingModel;
+  provider.rerankingModel = createRerankingModel;
+
+  return provider as unknown as MixedbreadProvider;
 }
 
 /**
